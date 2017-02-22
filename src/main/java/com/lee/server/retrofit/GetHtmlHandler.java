@@ -51,22 +51,27 @@ public class GetHtmlHandler extends
 		String fileName = uriPath == null ? "test.html" : uriPath.replace(
 				"/getHtml", "");
 		System.out.println("fileName is : "+fileName);
-		String filePath = GetHtmlHandler.class.getClassLoader()
-				.getResource("html/" + fileName).getPath();
-		System.out.println("html file path is : " + filePath);
-		byte[] bytes = FileUtils.getFileContent(filePath);
-		System.out.println();
-		String responseContent = new String(bytes);
-		System.out.println("response content is : " + responseContent);
-		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
-		byteBuf.writeBytes(bytes);
-		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
-				byteBuf);
-		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
-		HttpUtils.addCacheHeader(response);
-		response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
-				Constants.HEADER_VALUE_CONTENT_TYPE_HTML);
-		ctx.writeAndFlush(response);
+		try{
+			String filePath = GetHtmlHandler.class.getClassLoader()
+					.getResource("html/" + fileName).getPath();
+			System.out.println("html file path is : " + filePath);
+			byte[] bytes = FileUtils.getFileContent(filePath);
+			System.out.println();
+			String responseContent = new String(bytes);
+			System.out.println("response content is : " + responseContent);
+			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
+			byteBuf.writeBytes(bytes);
+			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
+					byteBuf);
+			HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
+			HttpUtils.addCacheHeader(response);
+			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
+					Constants.HEADER_VALUE_CONTENT_TYPE_HTML);
+			ctx.writeAndFlush(response);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 
 }
