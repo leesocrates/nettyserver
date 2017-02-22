@@ -23,17 +23,14 @@ public class Constants {
 	public static final String HEADER_VALUE_CONTENT_TYPE_JSON = "application/json; charset=UTF-8";
 	public static final String HEADER_VALUE_CONTENT_TYPE_HTML = "text/html";
 	public static final String HEADER_VALUE_CACHE_CONTROL = "max-age=0, private, must-revalidate";
-	public static final String HEADER_VALUE_SERVER = "diagnose.lewatek.com";
+	public static final String HEADER_VALUE_SERVER = "socrate.lee.com";
+	public static final String HEADER_KEY_CONTENT_TYPE = "Content-type";
 
-	public static final String PUT_AUTHORIZATION_LOCATION = "https://diagnose.lewatek.com/api/authorizations/1";
 	public static final String DEFAULT_URL = "https://api.github.com/authorizations/1";
-	public static final String DEFAULT_NOTE = "com.lewa.fota";
 	public static final String DEFAULT_NOTE_URL = "http://optional/note/url";
 	public static final String SCOPE_USER_PROFILE = "user:profile";
-	public static final String APP_URL = "http://diagnose.lewatek.com";
-	public static final String APP_NAME = "Lewa Diagnose";
+	public static final String APP_NAME = "Password Manager";
 	public static final int AUTHORIZATION_ID = 1;
-	public static final String DOWN_NEW_APP_BASE_URL = "https://diagnose.lewatek.com/download/";
 
 	public static final String BAD_REQUEST_ERROR_MESSAGE = "{\"message\":\"Body should be a JSON object\"}";
 	public static final String BAD_REQUEST_NOT_JSON_OBJECT = "Body should be a JSON object";

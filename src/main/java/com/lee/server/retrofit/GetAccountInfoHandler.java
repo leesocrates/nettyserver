@@ -20,11 +20,9 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.router.Routed;
 
-public class RegisterHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public class GetAccountInfoHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
 	private int contentLength = 0;
-	private int curContentLength;
-	private StringBuilder allContent = new StringBuilder();
 
 	@Override
 	protected void messageReceived(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
@@ -34,24 +32,15 @@ public class RegisterHandler extends SimpleChannelInboundHandler<FullHttpRequest
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if (msg instanceof DefaultHttpContent) {
-			ByteBuf bytebuf = ((DefaultHttpContent) msg).content();
-			byte[] contents = new byte[bytebuf.readableBytes()];
-			bytebuf.readBytes(contents);
-			curContentLength += contents.length;
-			allContent.append(new String(contents));
-			System.out.println("curContentLength is : " + curContentLength);
-			if (curContentLength == contentLength) {
-				System.out.println("all body is accept success \n content is : "+allContent.toString());
-				handleRequestContent(ctx, allContent.toString());
-			}
-		} else if (msg instanceof Routed) {
+		if (msg instanceof Routed) {
 			HttpRequest httpRequest = ((Routed) msg).request();
 			HttpHeaders headers = httpRequest.headers();
 			contentLength = headers.getInt(HttpHeaderNames.CONTENT_LENGTH, 0);
-			System.out.println("http request header is : " + headers.toString()+" http protocol is : "+httpRequest.protocolVersion());
+			System.out.println("http request header is : " + headers.toString());
 			final String uri = httpRequest.uri();
 			System.out.println("http request uri is : " + uri);
+			
+			handleRequestContent(ctx, "");
 		}
 	}
 
@@ -61,7 +50,7 @@ public class RegisterHandler extends SimpleChannelInboundHandler<FullHttpRequest
 
 	int i = 0;
 	private void handleResponse(ChannelHandlerContext ctx) {
-		BaseResponse baseResponse = new BaseResponse(true, "", "register success, num is : "+i++);
+		BaseResponse baseResponse = new BaseResponse(true, "", "the account is lee num is : "+i++);
 		String responseContent = Utils.getJsonString(baseResponse);
 		System.out.println("response content is : " + responseContent);
 

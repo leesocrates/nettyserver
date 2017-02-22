@@ -22,14 +22,14 @@ public class HttpUtils {
 
 	public static void addHttpHeader(FullHttpResponse response,
 			String responseJsonContent, long counter) {
-		addHttpHeader(response, responseJsonContent, counter, "");
+		addCommonHttpHeader(response, responseJsonContent, counter, "");
 	}
 
-	public static void addHttpHeader(FullHttpResponse response,
+	public static void addCommonHttpHeader(FullHttpResponse response,
 			String responseJsonContent, long counter, String appVersionNew) {
 		HttpHeaders headers = response.headers();
-		headers.set(HttpHeaderNames.CONTENT_TYPE,
-				Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
+//		headers.set(HttpHeaderNames.CONTENT_TYPE,
+//				Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
 		headers.add(HttpHeaderNames.CONTENT_LENGTH,
 				responseJsonContent.length() + "");
 		headers.add(HttpHeaderNames.CACHE_CONTROL,
@@ -51,6 +51,15 @@ public class HttpUtils {
 				Constants.HEADER_VALUE_X_CONTENT_TYPE_OPTIONS);
 		headers.add(Constants.HEADER_KEY_X_APPVERSION_NEW,
 				appVersionNew == null ? "" : appVersionNew);
+	}
+	
+	public static void addCacheHeader(FullHttpResponse response){
+		HttpHeaders headers = response.headers();
+		headers.add("Cache-Control", "max-age=60, only-if-cached, max-stale=120");
+	}
+	
+	public static void addHttpHeader(HttpHeaders headers, String name, String value){
+		headers.add(name, value);
 	}
 
 	public static void sendError(ChannelHandlerContext ctx,

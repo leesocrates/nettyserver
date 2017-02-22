@@ -14,11 +14,15 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.router.Handler;
 import io.netty.handler.codec.http.router.Router;
+import socket.SocketHandler;
 
 public class RetrofitServer {
 
-	private static final Router router = new Router().POST("/register", RegisterHandler.class).POST("/upload/image",
-			UploadImageHandler.class).POST("/Image/PostImage", UploadImageHandler.class);
+	private static final Router router = new Router().POST("/register", RegisterHandler.class)
+			.POST("/upload/image", UploadImageHandler.class).POST("/Image/PostImage", UploadImageHandler.class)
+			.GET("/getAccount", GetAccountInfoHandler.class).GET("/getHtml/:path", GetHtmlHandler.class)
+			.GET("/getFile/:path", GetFileHandle.class).GET("/getJson/:path", GetJsonHandler.class)
+			.GET("/getFileDir/:path", FileDownloadHandler.class).GET("/getImage/:path", GetImageHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {
@@ -42,16 +46,16 @@ public class RetrofitServer {
 					.option(ChannelOption.SO_RCVBUF, 160 * 1024).childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
+//							ch.pipeline().addLast(new SocketHandler());
 							ch.pipeline().addLast(new HttpRequestDecoder());
 							ch.pipeline().addLast(new HttpResponseEncoder());
-							// ch.pipeline().addLast(new HeaderHandler());
 							ch.pipeline().addLast(handler.name(), handler);
 						}
 					});
 			ChannelFuture future = b.bind(new InetSocketAddress(port)).sync();
 			System.out.println("retrofit server start at : " + "http://localhost:" + port);
 			future.channel().closeFuture().sync();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			bossGroup.shutdownGracefully();

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+test set cookie
+<button id="btn" onclick="toast()">Click me</button>
+<script type="text/javascript">
+var i=1;
+function toast(){
+	document.getElementById('btn').innerHTML="test"+document.cookie;
+	document.cookie='session=jfkdslkfd'+i++;
+	confirm("set cookie "+document.cookie);
+}
+toast();
+</script>
+
+</body>
+</html>

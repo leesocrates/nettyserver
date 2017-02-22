@@ -46,12 +46,13 @@ public class UploadImageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 			byte[] contents = new byte[bytebuf.readableBytes()];
 			bytebuf.readBytes(contents);
 			curContentLength += contents.length;
-			allContent.append(new String(contents,"ISO-8859-1"));
+			allContent.append(new String(contents,"utf-8"));
 			System.out.println("curContentLength is : " + curContentLength);
-			// handleRequestContent(ctx, contents);
 			if (curContentLength == contentLength) {
+				System.out.println("content is : "+allContent.toString().substring(0, 1000));
 				System.out.println("all body is accept success "+" curtime is : "+System.currentTimeMillis());
-				handleRequestContent(ctx, allContent.toString());
+				handleRequestContent(ctx, allContent.toString().getBytes());
+//				handleResponse(ctx);
 			}
 		} else if (msg instanceof Routed) {
 			HttpRequest httpRequest = ((Routed) msg).request();
@@ -63,14 +64,10 @@ public class UploadImageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 		}
 	}
 
-	private void handleRequestContent(ChannelHandlerContext ctx, String content) {
+	private void handleRequestContent(ChannelHandlerContext ctx, byte[] imageBytes) {
 		// UserInfo userInfo = Utils.getObject(content, UserInfo.class);
 		// FileUtils.saveImageFile("", userInfo.getUserIcon());
 
-		Type typeList = new TypeToken<byte[]>() {
-		}.getType();
-		Gson gson = new Gson();
-		byte[] imageBytes = gson.fromJson(content, typeList);
 		FileUtils.saveImageFile("", imageBytes);
 
 		// FileUtils.saveImageFile("", content);
@@ -85,7 +82,7 @@ public class UploadImageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 		byteBuf.writeBytes(responseContent.getBytes());
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CREATED, byteBuf);
-		HttpUtils.addHttpHeader(response, responseContent, 0, "");
+		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		ctx.writeAndFlush(response);
 	}
 }
