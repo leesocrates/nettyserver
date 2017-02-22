@@ -45,6 +45,7 @@ public class GetHtmlHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
 		String fileName = uriPath==null ? "test.html": uriPath.replace("/getHtml", "");
 		String filePath = GetHtmlHandler.class.getClassLoader().getResource("html/"+fileName).getPath();
+		System.out.println("html file path is : "+filePath);
 		byte[] bytes = FileUtils.getFileContent(filePath);
 		String responseContent = new String(bytes);
 		System.out.println("response content is : " + responseContent);
