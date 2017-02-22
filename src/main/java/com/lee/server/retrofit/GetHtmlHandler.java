@@ -44,7 +44,7 @@ public class GetHtmlHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
 	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
 		String fileName = uriPath==null ? "test.html": uriPath.replace("/getHtml", "");
-		byte[] bytes = FileUtils.getFileContent("src/main/java/html/"+fileName);
+		byte[] bytes = FileUtils.getFileContent("/html/"+fileName);
 		String responseContent = new String(bytes);
 		System.out.println("response content is : " + responseContent);
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
