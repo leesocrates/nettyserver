@@ -41,12 +41,13 @@ public class FileUtils {
 
 	public static byte[] getFileContent(String filePath) {
 		byte[] bytes = null;
+		FileInputStream in = null;
 		try {
 			File file = new File(filePath);
 			if (!file.exists()) {
 				System.out.println("file not exist");
 			}
-			FileInputStream in = new FileInputStream(filePath);
+			in = new FileInputStream(filePath);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			System.out.println("bytes available:" + in.available());
 
@@ -58,8 +59,6 @@ public class FileUtils {
 				out.write(temp, 0, size);
 			}
 
-			in.close();
-
 			bytes = out.toByteArray();
 			System.out.println("bytes size got is:" + bytes.length);
 		} catch (FileNotFoundException e) {
@@ -68,6 +67,14 @@ public class FileUtils {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return bytes;
 	}
