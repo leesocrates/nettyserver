@@ -47,8 +47,10 @@ public class GetHtmlHandler extends
 	}
 
 	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
+		System.out.println("handleRequestContent method start");
 		String fileName = uriPath == null ? "test.html" : uriPath.replace(
 				"/getHtml", "");
+		System.out.println("fileName is : "+fileName);
 		String filePath = GetHtmlHandler.class.getClassLoader()
 				.getResource("html/" + fileName).getPath();
 		System.out.println("html file path is : " + filePath);
