@@ -42,7 +42,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>com.lewa.diagnose.UserRest.UserRestServer</mainClass>
+							<mainClass>com.lee.server.retrofit.RetrofitServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
