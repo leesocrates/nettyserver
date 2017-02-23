@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import org.xml.sax.InputSource;
 
 public class FileUtils {
 
@@ -75,6 +78,26 @@ public class FileUtils {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		return bytes;
+	}
+	
+	public static byte[] getContentFromStream(InputStream in){
+		byte[] bytes = null;
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			System.out.println("bytes available:" + in.available());
+
+			byte[] temp = new byte[1024];
+
+			int size = 0;
+			while ((size = in.read(temp)) != -1) {
+				out.write(temp, 0, size);
+			}
+			bytes = out.toByteArray();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return bytes;
 	}

@@ -3,6 +3,8 @@ package com.lee.server.retrofit;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
+import java.io.InputStream;
+
 import com.lee.server.retrofit.utils.Constants;
 import com.lee.server.retrofit.utils.FileUtils;
 import com.lee.server.retrofit.utils.HttpUtils;
@@ -52,12 +54,13 @@ public class GetHtmlHandler extends
 				"/getHtml", "");
 		System.out.println("fileName is : "+fileName);
 		try{
-			String classPath = GetHtmlHandler.class.getClassLoader()
-					.getResource("").getPath();
-			System.out.println("classPath is : "+classPath);
-			String filePath = classPath+"/html" + fileName;
-			System.out.println("html file path is : " + filePath);
-			byte[] bytes = FileUtils.getFileContent(filePath);
+			InputStream in = GetHtmlHandler.class.getClassLoader()
+					.getResourceAsStream("html"+fileName);
+//			System.out.println("classPath is : "+classPath);
+//			String filePath = classPath+"/html" + fileName;
+//			System.out.println("html file path is : " + filePath);
+//			byte[] bytes = FileUtils.getFileContent(filePath);
+			byte[] bytes = FileUtils.getContentFromStream(in);
 			System.out.println();
 			String responseContent = new String(bytes);
 			System.out.println("response content is : " + responseContent);
