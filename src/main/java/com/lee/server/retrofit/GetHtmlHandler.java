@@ -49,19 +49,13 @@ public class GetHtmlHandler extends
 	}
 
 	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
-		System.out.println("handleRequestContent method start");
 		String fileName = uriPath == null ? "test.html" : uriPath.replace(
-				"/getHtml", "");
+				"/getHtml/", "");
 		System.out.println("fileName is : "+fileName);
 		try{
 			InputStream in = GetHtmlHandler.class.getClassLoader()
-					.getResourceAsStream("html"+fileName);
-//			System.out.println("classPath is : "+classPath);
-//			String filePath = classPath+"/html" + fileName;
-//			System.out.println("html file path is : " + filePath);
-//			byte[] bytes = FileUtils.getFileContent(filePath);
+					.getResourceAsStream("html/"+fileName);
 			byte[] bytes = FileUtils.getContentFromStream(in);
-			System.out.println();
 			String responseContent = new String(bytes);
 			System.out.println("response content is : " + responseContent);
 			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());

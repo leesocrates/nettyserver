@@ -2,6 +2,8 @@ package com.lee.server.retrofit;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
+import java.io.InputStream;
+
 import com.lee.server.retrofit.utils.Constants;
 import com.lee.server.retrofit.utils.FileUtils;
 import com.lee.server.retrofit.utils.HttpUtils;
@@ -42,8 +44,10 @@ public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 	}
 
 	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
-		String fileName = uriPath==null ? "test.json": uriPath.replace("/getJson", "");
-		byte[] bytes = FileUtils.getFileContent("src/main/java/json/"+fileName);
+		String fileName = uriPath==null ? "test.json": uriPath.replace("/getJson/", "");
+		InputStream in = GetHtmlHandler.class.getClassLoader()
+				.getResourceAsStream("json/"+fileName);
+		byte[] bytes = FileUtils.getContentFromStream(in);
 		String responseContent = new String(bytes);
 		System.out.println("response content is : " + responseContent);
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());

@@ -3,6 +3,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.File;
+import java.io.InputStream;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -45,9 +46,11 @@ public class GetImageHandler extends SimpleChannelInboundHandler<FullHttpRequest
 		handleResponse(ctx, fileName);
 	}
 
-	private void handleResponse(ChannelHandlerContext ctx, String filename) {
-		byte[] bytes = FileUtils.getFileContent(filename);
-		String suffix = filename.substring(filename.lastIndexOf(".")+1);
+	private void handleResponse(ChannelHandlerContext ctx, String fileName) {
+		InputStream in = GetHtmlHandler.class.getClassLoader()
+				.getResourceAsStream("img/"+fileName);
+		byte[] bytes = FileUtils.getContentFromStream(in);
+		String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
 
 		ByteBuf byteBuf = ctx.alloc().buffer(bytes.length);
 		byteBuf.writeBytes(bytes);
