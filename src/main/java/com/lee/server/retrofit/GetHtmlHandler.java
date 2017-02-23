@@ -52,8 +52,10 @@ public class GetHtmlHandler extends
 				"/getHtml", "");
 		System.out.println("fileName is : "+fileName);
 		try{
-			String filePath = GetHtmlHandler.class.getClassLoader()
-					.getResource("html" + fileName).getPath();
+			String classPath = GetHtmlHandler.class.getClassLoader()
+					.getResource("").getPath();
+			System.out.println("classPath is : "+classPath);
+			String filePath = classPath+"/html" + fileName;
 			System.out.println("html file path is : " + filePath);
 			byte[] bytes = FileUtils.getFileContent(filePath);
 			System.out.println();
