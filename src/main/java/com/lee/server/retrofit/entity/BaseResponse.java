@@ -1,21 +1,28 @@
 package com.lee.server.retrofit.entity;
 
-public class BaseResponse implements Response{
-	
+import java.util.List;
+
+public class BaseResponse<T> implements Response {
+
 	private boolean isSuccess;
 	private String status;
 	private String message;
-	
+	private List<T> data;
+
 	public BaseResponse() {
 	}
-	
-	public BaseResponse(boolean isSuccess, String status, String message){
+
+	public BaseResponse(boolean isSuccess, String status, String message) {
+		this(isSuccess, status, message, null);
+	}
+
+	public BaseResponse(boolean isSuccess, String status, String message, List<T> data) {
 		this.isSuccess = isSuccess;
 		this.status = status;
 		this.message = message;
+		this.data = data;
 	}
 
-	
 	public void setSuccess(boolean isSuccess) {
 		this.isSuccess = isSuccess;
 	}
@@ -42,5 +49,21 @@ public class BaseResponse implements Response{
 	public String getMessage() {
 		return message;
 	}
+
+	public List<T> getData() {
+		return data;
+	}
+
+	public void setData(List<T> data) {
+		this.data = data;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseResponse [isSuccess=" + isSuccess + ", status=" + status + ", message=" + message + ", data=" + data
+				+ "]";
+	}
+	
+	
 
 }

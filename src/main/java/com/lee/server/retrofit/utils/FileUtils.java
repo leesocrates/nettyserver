@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.xml.sax.InputSource;
-
 public class FileUtils {
 
 	static int length = 0;

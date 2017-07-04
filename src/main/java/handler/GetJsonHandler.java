@@ -1,18 +1,17 @@
-package com.lee.server.retrofit;
-
-import static io.netty.handler.codec.http.HttpResponseStatus.CREATED;
+package handler;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import com.lee.server.retrofit.entity.BaseResponse;
+import java.io.InputStream;
+
+import com.lee.server.retrofit.utils.Constants;
+import com.lee.server.retrofit.utils.FileUtils;
 import com.lee.server.retrofit.utils.HttpUtils;
-import com.lee.server.retrofit.utils.Utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -20,7 +19,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.router.Routed;
 
-public class GetAccountInfoHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
 	private int contentLength = 0;
 
@@ -39,26 +38,25 @@ public class GetAccountInfoHandler extends SimpleChannelInboundHandler<FullHttpR
 			System.out.println("http request header is : " + headers.toString());
 			final String uri = httpRequest.uri();
 			System.out.println("http request uri is : " + uri);
-			
-			handleRequestContent(ctx, "");
+
+			handleRequestContent(ctx, uri);
 		}
 	}
 
-	private void handleRequestContent(ChannelHandlerContext ctx, String content) {
-		handleResponse(ctx);
-	}
-
-	int i = 0;
-	private void handleResponse(ChannelHandlerContext ctx) {
-		BaseResponse baseResponse = new BaseResponse(true, "", "the account is lee num is : "+i++);
-		String responseContent = Utils.getJsonString(baseResponse);
+	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
+		String fileName = uriPath==null ? "test.json": uriPath.replace("/getJson/", "");
+		InputStream in = GetHtmlHandler.class.getClassLoader()
+				.getResourceAsStream("json/"+fileName);
+		byte[] bytes = FileUtils.getContentFromStream(in);
+		String responseContent = new String(bytes);
 		System.out.println("response content is : " + responseContent);
-
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
-		byteBuf.writeBytes(responseContent.getBytes());
+		byteBuf.writeBytes(bytes);
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, byteBuf);
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
+		response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
 		ctx.writeAndFlush(response);
 	}
+
 }

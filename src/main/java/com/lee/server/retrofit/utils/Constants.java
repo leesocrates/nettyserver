@@ -18,7 +18,7 @@ public class Constants {
 	public static final String HEADER_KEY_STATUS = "status";
 	public static final String HEADER_KEY_X_DIAGNOSE_MEDIA_TYPE = "X-Diagnose-Media-Type";
 	public static final String HEADER_VALUE_X_CONTENT_TYPE_OPTIONS = "nosniff";
-	public static final String HEADER_VALUE_X_DIAGNOSE_MEDIA_TYPE = "diagnose.v1";
+	public static final String HEADER_VALUE_X_DIAGNOSE_MEDIA_TYPE = "retrofitServer.v1";
 	public static final String HEADER_VALUE_DEFAULT_X_RateLimit_Limit = "60";
 	public static final String HEADER_VALUE_CONTENT_TYPE_JSON = "application/json; charset=UTF-8";
 	public static final String HEADER_VALUE_CONTENT_TYPE_HTML = "text/html";
@@ -40,4 +40,10 @@ public class Constants {
 	public static final int DEFAULT_COUNTER_EXPIRE_TIME = 1;
 	public static final int DEFAULT_COUNTER_INIT_VALUE = 1;
 	public static final long DEFAULT_RATELIMIT_COUNTER = 60;
+	
+	public static class Status{
+		public static final String STATUS_SUCCESS = "0";
+		public static final String STATUS_REGIST_FAIL = "1";
+		public static final String STATUS_LOGIN_FAIL = "2";
+	}
 }

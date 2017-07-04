@@ -2,6 +2,15 @@ package com.lee.server.retrofit;
 
 import java.net.InetSocketAddress;
 
+import handler.FileDownloadHandler;
+import handler.GetAccountInfoHandler;
+import handler.GetFileHandle;
+import handler.GetHtmlHandler;
+import handler.GetImageHandler;
+import handler.GetJsonHandler;
+import handler.LoginHandler;
+import handler.RegisterHandler;
+import handler.UploadImageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -19,10 +28,11 @@ import socket.SocketHandler;
 public class RetrofitServer {
 
 	private static final Router router = new Router().POST("/register", RegisterHandler.class)
-			.POST("/upload/image", UploadImageHandler.class).POST("/Image/PostImage", UploadImageHandler.class)
-			.GET("/getAccount", GetAccountInfoHandler.class).GET("/getHtml/:path", GetHtmlHandler.class)
-			.GET("/getFile/:path", GetFileHandle.class).GET("/getJson/:path", GetJsonHandler.class)
-			.GET("/getFileDir/:path", FileDownloadHandler.class).GET("/getImage/:path", GetImageHandler.class);
+			.POST("/login", LoginHandler.class).POST("/upload/image", UploadImageHandler.class)
+			.POST("/Image/PostImage", UploadImageHandler.class).GET("/getAccount", GetAccountInfoHandler.class)
+			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
+			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
+			.GET("/getImage/:path", GetImageHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {
@@ -46,7 +56,7 @@ public class RetrofitServer {
 					.option(ChannelOption.SO_RCVBUF, 160 * 1024).childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
-//							ch.pipeline().addLast(new SocketHandler());
+							// ch.pipeline().addLast(new SocketHandler());
 							ch.pipeline().addLast(new HttpRequestDecoder());
 							ch.pipeline().addLast(new HttpResponseEncoder());
 							ch.pipeline().addLast(handler.name(), handler);
