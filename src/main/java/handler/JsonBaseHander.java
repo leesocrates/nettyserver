@@ -26,7 +26,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.router.Routed;
 
-public abstract class JsonHander<T> extends SimpleChannelInboundHandler<FullHttpRequest> {
+public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<FullHttpRequest> {
 
 	private int contentLength = 0;
 	private int curContentLength;

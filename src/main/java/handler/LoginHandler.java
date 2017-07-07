@@ -14,7 +14,7 @@ import com.lee.server.retrofit.utils.SafeUtils;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public class LoginHandler  extends JsonHander<Account> {
+public class LoginHandler  extends JsonBaseHander<Account> {
 
 	@Override
 	protected Type getRequestContentGsonType() {

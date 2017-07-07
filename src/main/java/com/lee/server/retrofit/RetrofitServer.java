@@ -2,6 +2,8 @@ package com.lee.server.retrofit;
 
 import java.net.InetSocketAddress;
 
+import handler.AccountRecordListHandler;
+import handler.AddAccountRecordHandler;
 import handler.FileDownloadHandler;
 import handler.GetAccountInfoHandler;
 import handler.GetFileHandle;
@@ -28,8 +30,10 @@ import socket.SocketHandler;
 public class RetrofitServer {
 
 	private static final Router router = new Router().POST("/register", RegisterHandler.class)
-			.POST("/login", LoginHandler.class).POST("/upload/image", UploadImageHandler.class)
-			.POST("/Image/PostImage", UploadImageHandler.class).GET("/getAccount", GetAccountInfoHandler.class)
+			.POST("/login", LoginHandler.class).POST("addAccountRecord", AddAccountRecordHandler.class)
+			.GET("accountRecordList", AccountRecordListHandler.class)
+			.POST("/upload/image", UploadImageHandler.class)
+			.GET("/getAccount", GetAccountInfoHandler.class)
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
 			.GET("/getImage/:path", GetImageHandler.class);

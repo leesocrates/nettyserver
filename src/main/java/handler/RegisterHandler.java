@@ -10,7 +10,7 @@ import com.lee.server.retrofit.utils.Constants;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public class RegisterHandler extends JsonHander<Account> {
+public class RegisterHandler extends JsonBaseHander<Account> {
 
 	@Override
 	protected void handleRequest(ChannelHandlerContext ctx, Account t) {
