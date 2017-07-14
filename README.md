@@ -16,10 +16,10 @@ private static final Router router = new Router().POST("/register", RegisterHand
 	Handler handler = new Handler(router);
 ```
 
-使用方法：
-运行RetrofitServer这个类，启动服务
-服务启动后，就可以调用接口获取信息了
-例如：
-在本机浏览器中输入：
-http://localhost:8080/getHtml/test1
+使用方法：<br>
+运行RetrofitServer这个类，启动服务<br>
+服务启动后，就可以调用接口获取信息了<br>
+例如：<br>
+在本机浏览器中输入：<br>
+http://localhost:8080/getHtml/test1.html <br>
 就可以打开一个html的测试页面
