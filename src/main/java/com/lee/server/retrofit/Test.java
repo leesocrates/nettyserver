@@ -15,5 +15,6 @@ public class Test {
 		}.getType();
 		Account account = gson.fromJson(result, type);
 		System.out.println(account);
+		
 	}
 }

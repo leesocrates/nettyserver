@@ -81,6 +81,9 @@ public class FileUtils {
 	}
 	
 	public static byte[] getContentFromStream(InputStream in){
+		if(in ==null){
+			return new byte[0];
+		}
 		byte[] bytes = null;
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
