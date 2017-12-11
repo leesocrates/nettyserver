@@ -29,18 +29,12 @@ import socket.SocketHandler;
 
 public class RetrofitServer {
 
-	private static final Router router = new Router().POST("/register", RegisterHandler.class)
-			.POST("/login", LoginHandler.class).POST("addAccountRecord", AddAccountRecordHandler.class)
-			.GET("accountRecordList", AccountRecordListHandler.class)
-			.POST("/upload/image", UploadImageHandler.class)
-			.GET("/getAccount", GetAccountInfoHandler.class)
-			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
-			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
-			.GET("/getImage/:path", GetImageHandler.class);
+	private static final Router router = new Router().GET("/getFile/:path", GetFileHandle.class)
+			.GET("/getJson/:path", GetJsonHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {
-		int port = 8080;
+		int port = 8090;
 		if (args.length > 0) {
 			try {
 				port = Integer.parseInt(args[0]);
