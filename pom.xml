@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.lee.server</groupId>
-	<artifactId>retrofit</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>restfulServer</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>retrofit</name>
+	<name>restfulServer</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
