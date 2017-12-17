@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>navigator.getUserMedia</title>
+  <style>
+  video.local { transform: rotateY(180deg); }
+  </style>
+</head>
+<body>
+<video class="local" autoplay></video>
+<script>
+(function() {
+  var localVideo        = document.querySelector("video.local");
+  var localMediaStream  = null;
+  var localMediaURL     = null;
+  function getMediaConstraints() {
+    if (navigator.webkitGetUserMedia) {
+      // Chrome
+      return {
+        video: {
+          mandatory: { minWidth: 640, minHeight: 480 },
+          optional: [{ minWidth: 1280 }, { minHeight: 720 }, { facingMode: "user" }]
+        },
+        audio: true
+      };
+    }
+    // Firefox
+    return {
+      video: {
+        width: { min: 640, ideal: 1280 },
+        height: { min: 480, ideal: 720 },
+        facingMode: "user"
+      },
+      audio: true
+    };
+  }
+  function getUserMedia(callback) {
+    if (navigator.getUserMedia === undefined) {
+      navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+      if (navigator.getUserMedia === undefined) {
+        console.error('getUserMedia not supported.')
+        return false;
+      }
+    }
+    navigator.getUserMedia(getMediaConstraints(), callback, function(e) {
+      console.error('getUserMedia failed: ' + e.message);
+    });
+  }
+  getUserMedia(function(stream) {
+    localMediaStream = stream;
+    localVideo.src = localMediaURL = URL.createObjectURL(localMediaStream);
+  });
+})();
+</script>
+</body>
+</html>
