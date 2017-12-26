@@ -40,6 +40,10 @@ var users = {};
 //when a user connects to our sever 
 wss.on('connection', function(connection) { 
    console.log("user connected");
+   
+   connection.on("error", function(error){
+	   console.log("connection to user "+connection.name +" has a error :"+error);
+   });
 	
    //when server gets a message from a connected user 
    connection.on('message', function(message){

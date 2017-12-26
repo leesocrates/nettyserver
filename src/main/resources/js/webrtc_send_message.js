@@ -1,4 +1,5 @@
-var connection = new WebSocket('ws://localhost:9090'); 
+var connection = new WebSocket('ws://47.52.98.195:9090');
+//var connection = new WebSocket('ws://localhost:9090'); 
 var name = "";
 var receiveChannel;
 
@@ -63,7 +64,7 @@ function onLogin(success) {
 //      }); 
       var servers = null;
       pcConstraint = null;
-      myConnection =  new RTCPeerConnection(servers,  pcConstraint);
+      myConnection =  new RTCPeerConnection(configuration,  pcConstraint);
 		
       console.log("RTCPeerConnection object was created"); 
       console.log(myConnection); 
