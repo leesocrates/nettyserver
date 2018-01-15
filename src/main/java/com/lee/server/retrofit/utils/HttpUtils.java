@@ -3,6 +3,9 @@ package com.lee.server.retrofit.utils;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.UnsupportedEncodingException;
+
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,18 +28,29 @@ public class HttpUtils {
 		addCommonHttpHeader(response, responseJsonContent, counter, "");
 	}
 
+	/**
+	 * 
+	 * @param response
+	 * @param responseStringContent 如果生成的String是从byte[]来的，有可能String
+	 *                              的长度和byte[]的长度不一样，从byte[]生成String时
+	 *                              最好调用new String(byte[], charset)，传入字符编码
+	 *                              “ISO-8859-1”
+	 *                              
+	 * @param counter
+	 * @param appVersionNew
+	 */
 	public static void addCommonHttpHeader(FullHttpResponse response,
-			String responseJsonContent, long counter, String appVersionNew) {
+			String responseStringContent, long counter, String appVersionNew) {
 		HttpHeaders headers = response.headers();
 //		headers.set(HttpHeaderNames.CONTENT_TYPE,
 //				Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
 		headers.add(HttpHeaderNames.CONTENT_LENGTH,
-				responseJsonContent.length() + "");
+				responseStringContent.length() + "");
 		headers.add(HttpHeaderNames.CACHE_CONTROL,
 				Constants.HEADER_VALUE_CACHE_CONTROL);
 		headers.add(HttpHeaderNames.SERVER, Constants.HEADER_VALUE_SERVER);
 		headers.add(HttpHeaderNames.ETAG,
-				DigestUtils.sha1Hex(responseJsonContent));
+				DigestUtils.sha1Hex(responseStringContent));
 		headers.add(HttpHeaderNames.DATE, Utils.getHttpHeaderDate());
 		headers.add(Constants.HEADER_KEY_X_DIAGNOSE_MEDIA_TYPE,
 				Constants.HEADER_VALUE_X_DIAGNOSE_MEDIA_TYPE);
@@ -51,6 +65,18 @@ public class HttpUtils {
 				Constants.HEADER_VALUE_X_CONTENT_TYPE_OPTIONS);
 		headers.add(Constants.HEADER_KEY_X_APPVERSION_NEW,
 				appVersionNew == null ? "" : appVersionNew);
+	}
+	
+	public static void addCommonHttpHeader(FullHttpResponse response,
+			byte[] responseBytes, long counter, String appVersionNew) {
+		try {
+			String responseString =  new String(responseBytes, "ISO-8859-1");
+			addCommonHttpHeader(response, responseString, counter, appVersionNew);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void addCacheHeader(FullHttpResponse response){

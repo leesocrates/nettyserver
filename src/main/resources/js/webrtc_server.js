@@ -159,13 +159,17 @@ wss.on('connection', function(connection) {
 		      if(connection.otherName) { 
 		         console.log("Disconnecting from ", connection.otherName); 
 		         var conn = users[connection.otherName]; 
-		         conn.otherName = null;
-					
-		         if(conn != null) { 
-		            sendTo(conn, { 
-		               type: "leave" 
-		            }); 
-		         }  
+		         if(conn.otherName){
+		        	 //如果一方发送了offer，另一方没有发送answer，这里otherName字段是undefined，赋值null会报错
+		        	 conn.otherName = null;
+						
+			         if(conn != null) { 
+			            sendTo(conn, { 
+			               type: "leave" 
+			            }); 
+			         }  
+		         }
+		         
 		      } 
 		   } 
 		});

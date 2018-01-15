@@ -54,13 +54,17 @@ public class GetJsHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 			InputStream in = GetHtmlHandler.class.getClassLoader()
 					.getResourceAsStream("js/" + fileName);
 			byte[] bytes = FileUtils.getContentFromStream(in);
-			String responseContent = new String(bytes);
+			//使用默认编码生成string, 生成的string的长度和bytes数组的长度不一样
+			//默认编码是可变字长的
+			String responseContent = new String(bytes, "ISO-8859-1");
+			System.out.println("bytes content length : " + bytes.length);
+			System.out.println("response content length : " + responseContent.length());
 			System.out.println("response content is : " + responseContent);
 			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 			byteBuf.writeBytes(bytes);
 			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,
 					OK, byteBuf);
-			HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
+			HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
 			HttpUtils.addCacheHeader(response);
 			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
 					Constants.HEADER_VALUE_CONTENT_TYPE_JS);

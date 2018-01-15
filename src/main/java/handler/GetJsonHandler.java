@@ -53,7 +53,7 @@ public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 		byteBuf.writeBytes(bytes);
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, byteBuf);
-		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
+		HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
 		HttpUtils.addCacheHeader(response);
 		response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
 		ctx.writeAndFlush(response);

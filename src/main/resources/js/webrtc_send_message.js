@@ -82,10 +82,7 @@ function onLogin(success) {
             });
          } 
       }; 
-		if(Math.floor(Math.random() * 10)%2==0){
-			console.log("open data channel ......")
-			openDataChannel();	
-		}
+      openDataChannel();	
       	
    } 
 };
@@ -142,7 +139,7 @@ connectToOtherUsernameBtn.addEventListener("click", function () {
 			
          myConnection.setLocalDescription(offer); 
       }, function (error) { 
-         alert("An error has occurred on createOffer()."); 
+         alert("An error has occurred on createOffer()."+ error); 
       }); 
       
    } 
