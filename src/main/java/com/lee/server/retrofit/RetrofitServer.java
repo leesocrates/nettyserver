@@ -16,6 +16,7 @@ import handler.GetJsonHandler;
 import handler.LoginHandler;
 import handler.RegisterHandler;
 import handler.UploadImageHandler;
+import handler.wx.WxTokenHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -39,7 +40,8 @@ public class RetrofitServer {
 			.GET("/getAccount", GetAccountInfoHandler.class)
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
-			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class);
+			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class)
+			.POST("/wx", WxTokenHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {

@@ -11,7 +11,6 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import java.lang.reflect.Type;
 
 import com.google.gson.reflect.TypeToken;
-import com.lee.server.retrofit.account.Account;
 import com.lee.server.retrofit.utils.Constants;
 import com.lee.server.retrofit.utils.HttpUtils;
 
@@ -19,13 +18,13 @@ public class WxTokenHandler extends JsonBaseHander<WxTokenRequest> {
 
 	@Override
 	protected Type getRequestContentGsonType() {
-		return new TypeToken<Account>() {
+		return new TypeToken<WxTokenRequest>() {
 		}.getType();
 	}
 
 	@Override
 	protected void handleRequest(ChannelHandlerContext ctx, WxTokenRequest t) {
-		String responseContent = t.echostr;
+		String responseContent = "{\"echostr\": \""+t.echostr+"\"}";
 		System.out.println("response content is : " + responseContent);
 		ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 		byteBuf.writeBytes(responseContent.getBytes());
