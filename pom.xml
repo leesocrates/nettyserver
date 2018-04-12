@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.lee.server</groupId>
-	<artifactId>restfulServer</artifactId>
+	<artifactId>wxServer</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>restfulServer</name>
+	<name>wxServer</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
