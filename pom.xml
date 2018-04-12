@@ -42,7 +42,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>com.lee.server.retrofit.RetrofitServer</mainClass>
+							<mainClass>com.lee.server.retrofit.WxServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
