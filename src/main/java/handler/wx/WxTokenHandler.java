@@ -70,8 +70,8 @@ public class WxTokenHandler extends
 			}
 		}
 		try {
-			String responseContent = "<!DOCTYPE html><html><body>" + echostr
-					+ "</body></html>";
+			String responseContent = echostr;
+//					"<!DOCTYPE html><html><body>" + echostr+ "</body></html>";
 			System.out.println("response content is : " + responseContent);
 			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 			byteBuf.writeBytes(responseContent.getBytes());
