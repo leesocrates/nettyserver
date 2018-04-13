@@ -80,7 +80,7 @@ public class WxTokenHandler extends
 			HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 			HttpUtils.addCacheHeader(response);
 			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
-					Constants.HEADER_VALUE_CONTENT_TYPE_HTML);
+					Constants.HEADER_VALUE_CONTENT_TYPE_TEXT);
 			ctx.writeAndFlush(response);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -22,6 +22,7 @@ public class Constants {
 	public static final String HEADER_VALUE_DEFAULT_X_RateLimit_Limit = "60";
 	public static final String HEADER_VALUE_CONTENT_TYPE_JSON = "application/json; charset=UTF-8";
 	public static final String HEADER_VALUE_CONTENT_TYPE_HTML = "text/html";
+	public static final String HEADER_VALUE_CONTENT_TYPE_TEXT = "text";
 	public static final String HEADER_VALUE_CONTENT_TYPE_JS = "application/javascript";
 	public static final String HEADER_VALUE_CACHE_CONTROL = "max-age=0, private, must-revalidate";
 	public static final String HEADER_VALUE_SERVER = "socrate.lee.com";
