@@ -41,7 +41,8 @@ public class RetrofitServer {
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
 			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class)
-			.POST("/wx", WxTokenHandler.class);
+			.GET("/wx", WxTokenHandler.class)
+			;
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {

@@ -19,7 +19,7 @@ import io.netty.handler.codec.http.router.Router;
 import java.net.InetSocketAddress;
 
 public class WxServer {
-	private static final Router router = new Router().POST("/wx", WxTokenHandler.class);
+	private static final Router router = new Router().GET("/wx", WxTokenHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {
