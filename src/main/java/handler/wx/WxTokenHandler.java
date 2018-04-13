@@ -69,6 +69,7 @@ public class WxTokenHandler extends
 				}
 			}
 		}
+		//这里没有做验证，只是简单的返回了echostr这个字段，真实的环境要做验证的，验证成功后才能返回echostr，否则不返回
 		try {
 			String responseContent = echostr;
 //					"<!DOCTYPE html><html><body>" + echostr+ "</body></html>";
