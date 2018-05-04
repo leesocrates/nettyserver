@@ -56,7 +56,9 @@ public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 		HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
 		HttpUtils.addCacheHeader(response);
 		response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
+		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
 		ctx.writeAndFlush(response);
+
 	}
 
 }

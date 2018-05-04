@@ -59,7 +59,7 @@ public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<Full
 			System.out.println("http request header is : " + headers.toString() + " http protocol is : "
 					+ httpRequest.protocolVersion());
 			final String uri = httpRequest.uri();
-			System.out.println("http request uri is : " + uri);
+			System.out.println("http request uri is : " + uri +" \n content length is : "+contentLength);
 		}
 	}
 
@@ -83,6 +83,7 @@ public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<Full
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, byteBuf);
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
+		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
 		ctx.writeAndFlush(response);
 	}
 
@@ -96,6 +97,7 @@ public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<Full
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, byteBuf);
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
+		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
 		ctx.writeAndFlush(response);
 	}
 

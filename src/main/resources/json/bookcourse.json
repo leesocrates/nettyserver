@@ -1,0 +1,23 @@
+[{ "courseName": "python学习", "courseContent": "这是Python的基础课",
+  "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄",
+  "imgUrl": "http://localhost:8080/getImage/images.jpeg", "price": "$112", "viewNums":"1222"},
+  { "courseName": "python", "courseContent": "这是Python的提高课",
+    "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄" ,
+    "imgUrl": "http://localhost:8080/getImage/images.jpeg", "viewNums":"1222"},
+  {
+  "courseName": "python", "courseContent": "这是Python的专家课",
+  "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄",
+    "imgUrl": "http://localhost:8080/getImage/images.jpeg", "viewNums":"1222"
+},{
+  "courseName": "python", "courseContent": "这是Python的专家课",
+  "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄",
+  "imgUrl": "http://localhost:8080/getImage/images.jpeg", "viewNums":"1222"
+},{
+  "courseName": "python", "courseContent": "这是Python的专家课",
+  "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄",
+  "imgUrl": "http://localhost:8080/getImage/images.jpeg", "viewNums":"1222"
+},{
+  "courseName": "python", "courseContent": "这是Python的专家课",
+  "courseNum": "总共10堂课", "targetPeople":"适合人群/年龄",
+  "imgUrl": "http://localhost:8080/getImage/images.jpeg", "viewNums":"1222"
+}]

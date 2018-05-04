@@ -4,18 +4,7 @@ import java.net.InetSocketAddress;
 
 import javax.swing.plaf.basic.BasicBorders.MarginBorder;
 
-import handler.AccountRecordListHandler;
-import handler.AddAccountRecordHandler;
-import handler.FileDownloadHandler;
-import handler.GetAccountInfoHandler;
-import handler.GetFileHandle;
-import handler.GetHtmlHandler;
-import handler.GetImageHandler;
-import handler.GetJsHandler;
-import handler.GetJsonHandler;
-import handler.LoginHandler;
-import handler.RegisterHandler;
-import handler.UploadImageHandler;
+import handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -39,7 +28,8 @@ public class RetrofitServer {
 			.GET("/getAccount", GetAccountInfoHandler.class)
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
-			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class);
+			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class)
+			.POST("/submitevaluation", SubmitEvaluationHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {
