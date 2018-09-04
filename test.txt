@@ -1,0 +1,50 @@
+----------------------------451369798456442672121943
+Content-Disposition: form-data; name="fileUpload"; filename="lee-2018-8-22.log"
+Content-Type: text/plain
+
+[2018-08-22 16:26:42.264] [info] electron main process createWindow() invoke
+[2018-08-22 16:26:47.505] [info] click left item Settings
+
+----------------------------451369798456442672121943--
+----------------------------488432054789597197176439
+Content-Disposition: form-data; name="fileUpload"; filename="lee-2018-8-22.log"
+Content-Type: text/plain
+
+[2018-08-22 16:26:42.264] [info] electron main process createWindow() invoke
+[2018-08-22 16:26:47.505] [info] click left item Settings
+[2018-08-22 16:35:30.273] [info] electron main process window closed
+[2018-08-22 16:35:33.168] [info] electron main process createWindow() invoke
+[2018-08-22 16:35:35.793] [info] click left item Settings
+
+----------------------------488432054789597197176439--
+----------------------------053943797795013861231666
+Content-Disposition: form-data; name="fileUpload"; filename="lee-2018-8-22.log"
+Content-Type: text/plain
+
+[2018-08-22 16:26:42.264] [info] electron main process createWindow() invoke
+[2018-08-22 16:26:47.505] [info] click left item Settings
+[2018-08-22 16:35:30.273] [info] electron main process window closed
+[2018-08-22 16:35:33.168] [info] electron main process createWindow() invoke
+[2018-08-22 16:35:35.793] [info] click left item Settings
+[2018-08-22 16:35:48.442] [info] electron main process window closed
+[2018-08-22 16:35:52.975] [info] electron main process createWindow() invoke
+[2018-08-22 16:35:55.273] [info] click left item Settings
+
+----------------------------053943797795013861231666--
+----------------------------940362307396543330347364
+Content-Disposition: form-data; name="fileUpload"; filename="lee-2018-8-22.log"
+Content-Type: text/plain
+
+[2018-08-22 16:36:43.557] [info] click left item Schedule
+[2018-08-22 16:36:44.723] [info] click left item Settings
+
+----------------------------940362307396543330347364--
+----------------------------981253103107368302849684
+Content-Disposition: form-data; name="fileUpload"; filename="lee-2018-8-22.log"
+Content-Type: text/plain
+
+[2018-08-22 16:36:53.644] [info] electron main process window closed
+[2018-08-22 16:36:57.394] [info] electron main process createWindow() invoke
+[2018-08-22 16:37:01.684] [info] click left item Settings
+
+----------------------------981253103107368302849684--

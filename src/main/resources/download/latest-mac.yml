@@ -1,0 +1,10 @@
+version: 1.0.0-2018.8.11-school
+files:
+  - url: MoShiCodeSchool-1.0.0-2018.8.10-school-mac.zip
+    sha512: RCvAH1F5BR4yN5yfnN9EYOFHE/dJ8rWnl/2qgZIz+G99ex9fbMs7Ux6gx37T6OAuc843TJ57cHvXT4ZBZZVl7w==
+  - url: MoShiCodeSchool-1.0.0-2018.8.10-school.dmg
+    sha512: 1E4izuNfizOyviMVgtxOOH0CgVVDGw6ERq5djE1946wGNENlBxIim07W8B/L7cIpx7l6uf6s+xiuVsUT+ty+Bg==
+    size: 50611709
+path: MoShiCodeSchool-1.0.0-2018.8.10-school-mac.zip
+sha512: RCvAH1F5BR4yN5yfnN9EYOFHE/dJ8rWnl/2qgZIz+G99ex9fbMs7Ux6gx37T6OAuc843TJ57cHvXT4ZBZZVl7w==
+releaseDate: '2018-08-10T08:23:45.286Z'

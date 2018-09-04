@@ -84,6 +84,7 @@ public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<Full
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
 		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
+		response.headers().add("Access-Control-Allow-Credentials", "true");
 		ctx.writeAndFlush(response);
 	}
 
@@ -98,6 +99,7 @@ public abstract class JsonBaseHander<T> extends SimpleChannelInboundHandler<Full
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
 		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
+		response.headers().add("Access-Control-Allow-Credentials", "true");
 		ctx.writeAndFlush(response);
 	}
 

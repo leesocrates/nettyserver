@@ -1,11 +1,16 @@
 [{ "courseName": "python学习",
   "courseIntroduction": "这是Python的基础课，有一些非常好玩的小游戏，可以在愉快的游戏中学习到知识",
-  "courseKnowledgeTree": "http://localhost:8080/getImage/images.jpeg",
-  "courseKnowledgePoint":"http://localhost:8080/getImage/images.jpeg",
+  "courseKnowledgeTree": "https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseKnowledgePoint":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
   "coursePrecautions": "可以将无数富有创意的想法和设计化为现实,从零开始写",
   "teacherInfo":{
     "name":"lee",
     "education":"master",
     "star":3
-  }}
- ]
+  },
+  "coursePackageName": "机器人编程探索",
+  "courseTitleImg":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseIntroImg":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseNotesImg": "https://react.semantic-ui.com/assets/images/wireframe/image.png"
+}
+]

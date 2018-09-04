@@ -11,3 +11,4 @@ buildNumber.properties
 .project
 .idea/*
 *.iml
+src/main/resources/download/*

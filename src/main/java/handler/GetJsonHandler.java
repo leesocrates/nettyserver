@@ -1,5 +1,8 @@
 package handler;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED;
+import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import java.io.InputStream;
@@ -57,6 +60,7 @@ public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 		HttpUtils.addCacheHeader(response);
 		response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_JSON);
 		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
+		response.headers().add("Access-Control-Allow-Credentials", "true");
 		ctx.writeAndFlush(response);
 
 	}

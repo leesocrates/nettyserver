@@ -24,12 +24,13 @@ public class RetrofitServer {
 	private static final Router router = new Router().POST("/register", RegisterHandler.class)
 			.POST("/login", LoginHandler.class).POST("addAccountRecord", AddAccountRecordHandler.class)
 			.GET("accountRecordList", AccountRecordListHandler.class)
-			.POST("/upload/image", UploadImageHandler.class)
+			.POST("/upload/image", UploadImageHandler.class).POST("/upload/file", UploadFileHandler.class)
 			.GET("/getAccount", GetAccountInfoHandler.class)
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
 			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class)
-			.POST("/submitevaluation", SubmitEvaluationHandler.class);
+			.POST("/submitevaluation", SubmitEvaluationHandler.class)
+			.GET("/getverifycode", GetAccountInfoHandler.class).GET("/download/:path", AutoUpdateHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {

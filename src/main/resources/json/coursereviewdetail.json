@@ -1,0 +1,22 @@
+{ "courseName": "python学习",
+  "courseIntro": "这是Python的基础课，有一些非常好玩的小游戏，可以在愉快的游戏中学习到知识",
+  "courseKnowledgePoint":"makecode编程环境，micro：bit硬件板",
+  "coursePrecautions": "可以将无数富有创意的想法和设计化为现实,从零开始写",
+  "teacher":{
+    "icon":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
+    "name":"lee",
+    "college":"浙江大学",
+    "education":"master",
+    "star":3,
+    "teachTime":"五年教龄",
+    "experience":"大学讲师",
+    "evaluateTimes":"100"
+  },
+  "coursePackageName": "机器人编程探索",
+  "courseTitleImg":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseIntroImg":"https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseNotesImg": "https://react.semantic-ui.com/assets/images/wireframe/image.png",
+  "courseDate": "Thu Apr 28 2018 15:15:13 GMT+0800 (CST)",
+  "reviews":"you are a good boy",
+  "homework":"用指令显示LED来实现跳动的心"
+}

@@ -58,6 +58,7 @@ public class GetAccountInfoHandler extends SimpleChannelInboundHandler<FullHttpR
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, byteBuf);
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
 		HttpUtils.addCacheHeader(response);
+		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
 		ctx.writeAndFlush(response);
 	}
 }

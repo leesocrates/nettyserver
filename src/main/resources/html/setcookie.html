@@ -11,6 +11,10 @@ test set cookie
 <script type="text/javascript">
 var i=1;
 function toast(){
+    if(document.cookie){
+        confirm("current cookie is : "+document.cookie);
+        return;
+    }
 	document.getElementById('btn').innerHTML="test"+document.cookie;
 	document.cookie='session=jfkdslkfd'+i++;
 	confirm("set cookie "+document.cookie);

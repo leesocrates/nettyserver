@@ -83,6 +83,8 @@ public class UploadImageHandler extends SimpleChannelInboundHandler<FullHttpRequ
 		byteBuf.writeBytes(responseContent.getBytes());
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CREATED, byteBuf);
 		HttpUtils.addCommonHttpHeader(response, responseContent, 0, "");
+		response.headers().add("Access-Control-Allow-Origin","http://localhost:3000");
+		response.headers().add("Access-Control-Allow-Credentials", "true");
 		ctx.writeAndFlush(response);
 	}
 }
