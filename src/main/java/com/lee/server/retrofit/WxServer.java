@@ -18,7 +18,7 @@ import io.netty.handler.codec.http.router.Router;
 
 public class WxServer {
 
-    private static final Router router = new Router().POST("/wx", WxAuthHandler.class);
+    private static final Router router = new Router().GET("/wx", WxAuthHandler.class);
     Handler handler = new Handler(router);
 
     public static void main(String[] args) throws Exception {
