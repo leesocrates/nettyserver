@@ -46,7 +46,7 @@ public class GetJsonHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 		}
 	}
 
-	private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
+	protected void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
 		String fileName = uriPath==null ? "test.json": uriPath.replace("/getJson/", "");
 		InputStream in = GetHtmlHandler.class.getClassLoader()
 				.getResourceAsStream("json/"+fileName);

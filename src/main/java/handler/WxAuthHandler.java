@@ -18,7 +18,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 public class WxAuthHandler extends GetJsonHandler {
     private static final String TOKEN = "socrateslee1988";
 
-    private void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
+    protected void handleRequestContent(ChannelHandlerContext ctx, String uriPath) {
         if(uriPath.contains("?")){
             String query = uriPath.substring(uriPath.indexOf("?"));
             String[] parameters = query.split("&");
@@ -38,8 +38,9 @@ public class WxAuthHandler extends GetJsonHandler {
                     }
                 }
             }
-            System.out.println(timestamp+" , "+nonce+" , "+" , "+signature+" , "+echostr);
+
             String signatureGen = makeSignature(timestamp, nonce);
+            System.out.println(timestamp+" , "+nonce+" , "+echostr+" , "+signature+" , "+signatureGen);
             if(signature.equals(signatureGen)){
                 System.out.println("request from wechat");
                 byte[] bytes = echostr.getBytes();

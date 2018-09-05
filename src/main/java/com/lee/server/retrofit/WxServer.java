@@ -19,10 +19,10 @@ import io.netty.handler.codec.http.router.Router;
 public class WxServer {
 
     private static final Router router = new Router().GET("/wx", WxAuthHandler.class);
-    Handler handler = new Handler(router);
+    private static Handler handler = new Handler(router);
 
     public static void main(String[] args) throws Exception {
-        int port = 80;
+        int port = 8080;
         if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
@@ -30,10 +30,10 @@ public class WxServer {
                 e.printStackTrace();
             }
         }
-        new RetrofitServer().run(port);
+        run(port);
     }
 
-    public void run(final int port) throws Exception {
+    public static void run(final int port) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
