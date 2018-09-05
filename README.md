@@ -13,7 +13,7 @@ private static final Router router = new Router().POST("/register", RegisterHand
 			.GET("/getHtml/:path", GetHtmlHandler.class).GET("/getFile/:path", GetFileHandle.class)
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
 			.GET("/getImage/:path", GetImageHandler.class);
-	Handler handler = new Handler(router);
+	Handler com.lee.server.retrofit.handler = new Handler(router);
 ```
 
 使用方法：<br>

@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
- * This handler should be put at the last position of the inbound pipeline to
+ * This com.lee.server.retrofit.handler should be put at the last position of the inbound pipeline to
  * catch all exceptions caused by bad client (closed connection, malformed
  * request etc.) and server processing.
  *

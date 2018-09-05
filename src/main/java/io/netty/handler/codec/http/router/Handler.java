@@ -7,8 +7,8 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
- * Inbound handler that converts HttpRequest to Routed and passes Routed to the
- * matched handler.
+ * Inbound com.lee.server.retrofit.handler that converts HttpRequest to Routed and passes Routed to the
+ * matched com.lee.server.retrofit.handler.
  */
 public class Handler extends DualAbstractHandler<ChannelHandlerAdapter, Router> {
   public static final String ROUTER_HANDLER_NAME = Handler.class.getName() + "_ROUTER_HANDLER";
@@ -33,7 +33,7 @@ public class Handler extends DualAbstractHandler<ChannelHandlerAdapter, Router> 
 
   /**
    * Should be used to add the router to pipeline:
-   * channel.pipeline().addLast(handler.name(), handler)
+   * channel.pipeline().addLast(com.lee.server.retrofit.handler.name(), com.lee.server.retrofit.handler)
    */
   public String name() {
     return ROUTER_HANDLER_NAME;
@@ -43,7 +43,7 @@ public class Handler extends DualAbstractHandler<ChannelHandlerAdapter, Router> 
   protected void routed(ChannelHandlerContext ctx, Routed routed) throws Exception {
 	  ChannelHandlerAdapter handler = (ChannelHandlerAdapter) routed.instanceFromTarget();
 
-    // The handler may have been added (keep alive)
+    // The com.lee.server.retrofit.handler may have been added (keep alive)
     ChannelPipeline pipeline     = ctx.pipeline();
     ChannelHandler  addedHandler = pipeline.get(ROUTED_HANDLER_NAME);
     if (handler != addedHandler) {
@@ -57,7 +57,7 @@ public class Handler extends DualAbstractHandler<ChannelHandlerAdapter, Router> 
       }
     }
 
-    // Pass to the routed handler
+    // Pass to the routed com.lee.server.retrofit.handler
     routed.retain();
     ctx.fireChannelRead(routed);
   }

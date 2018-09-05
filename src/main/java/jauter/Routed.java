@@ -35,7 +35,7 @@ public class Routed<T> {
     if (target == null) return null;
 
     if (target instanceof Class) {
-      // Create handler from class
+      // Create com.lee.server.retrofit.handler from class
       Class<?> klass = (Class<?>) target;
       return klass.newInstance();
     } else {
