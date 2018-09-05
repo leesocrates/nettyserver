@@ -2,8 +2,7 @@ package com.lee.server.retrofit;
 
 import java.net.InetSocketAddress;
 
-import handler.LoginHandler;
-import handler.RegisterHandler;
+import handler.WxAuthHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -19,7 +18,7 @@ import io.netty.handler.codec.http.router.Router;
 
 public class WxServer {
 
-    private static final Router router = new Router().POST("/wx", RegisterHandler.class);
+    private static final Router router = new Router().POST("/wx", WxAuthHandler.class);
     Handler handler = new Handler(router);
 
     public static void main(String[] args) throws Exception {

@@ -12,4 +12,8 @@ public class SafeUtils {
 	public static String passwordEncrypt(String password){
 		return DigestUtils.sha256Hex(password);
 	}
+
+	public static String sha1Encrypt(String s){
+		return DigestUtils.sha1Hex(s);
+	}
 }
