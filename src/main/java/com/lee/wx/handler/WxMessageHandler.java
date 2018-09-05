@@ -29,23 +29,21 @@ public class WxMessageHandler extends XmlBaseHandler<XmlMessage> {
     @Override
     protected void handleRequest(ChannelHandlerContext ctx, XmlMessage xmlMessage) {
         Message message = xmlMessage.xml;
-        System.out.println("get message :" + message);
-        if (message != null) {
-            if (message.MsgType.equals("text")) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("<xml>")
-                        .append("<ToUserName><![CDATA[").append(message.ToUserName).append("]]></ToUserName>")
-                        .append("<FromUserName><![CDATA[").append(message.FromUserName).append("]]></FromUserName>")
-                        .append("<CreateTime>").append(message.CreateTime).append("</CreateTime>")
-                        .append("<MsgType><![CDATA[text]]></MsgType>")
-                        .append("<Content><![CDATA[").append("welcom").append("]]></Content>")
-                        .append("</xml>");
-                handleSuccessResponse(ctx, sb.toString());
+        System.out.println("get message :"+message);
+        if(message!=null){
+            if(message.MsgType.equals("text")){
+                String from = message.FromUserName;
+                String to = message.ToUserName;
+                message.FromUserName = to;
+                message.ToUserName = from;
+                String jsonStr = new Gson().toJson(xmlMessage);
+                String xml = XML.toString(new JSONObject(jsonStr));
+                handleSuccessResponse(ctx, xml);
             } else {
                 handleSuccessResponse(ctx, "success");
             }
 
-        } else {
+        } else{
             handleSuccessResponse(ctx, "success");
         }
     }
@@ -62,7 +60,7 @@ public class WxMessageHandler extends XmlBaseHandler<XmlMessage> {
         ctx.writeAndFlush(response);
     }
 
-    private void loginFail(ChannelHandlerContext ctx) {
+    private void loginFail(ChannelHandlerContext ctx){
         handleFailResponse(ctx, Constants.Status.STATUS_LOGIN_FAIL, "the user name and password do not match");
     }
 
