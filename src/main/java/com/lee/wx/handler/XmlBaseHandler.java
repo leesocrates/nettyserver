@@ -57,6 +57,7 @@ public abstract class XmlBaseHandler<T> extends SimpleChannelInboundHandler<Full
     }
 
     protected T getRequestEntity(String bodyContent) {
+        System.out.println("request body string is : "+bodyContent);
         Gson gson = new Gson();
         Type type = getRequestContentGsonType();
         return gson.fromJson(bodyContent, type);

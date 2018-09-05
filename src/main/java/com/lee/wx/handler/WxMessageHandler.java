@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lee.utils.Constants;
 import com.lee.utils.HttpUtils;
 import com.lee.wx.entity.Message;
+import com.lee.wx.entity.XmlMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -17,16 +18,17 @@ import java.lang.reflect.Type;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-public class WxMessageHandler extends XmlBaseHandler<Message> {
+public class WxMessageHandler extends XmlBaseHandler<XmlMessage> {
 
     @Override
     protected Type getRequestContentGsonType() {
-        return new TypeToken<Message>() {
+        return new TypeToken<XmlMessage>() {
         }.getType();
     }
 
     @Override
-    protected void handleRequest(ChannelHandlerContext ctx, Message message) {
+    protected void handleRequest(ChannelHandlerContext ctx, XmlMessage xmlMessage) {
+        Message message = xmlMessage.xml;
         System.out.println("get message :"+message);
         if(message!=null){
             if(message.MsgType.equals("text")){
