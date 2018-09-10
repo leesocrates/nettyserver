@@ -2,6 +2,8 @@ package com.lee.wx;
 
 import java.net.InetSocketAddress;
 
+import com.lee.retrofit.handler.GetHtmlHandler;
+import com.lee.wx.handler.GetWxHtmlHandler;
 import com.lee.wx.handler.WxAuthHandler;
 import com.lee.wx.handler.WxMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -20,7 +22,8 @@ import io.netty.handler.codec.http.router.Router;
 public class WxServer {
 
     private static final Router router = new Router().GET("/wx", WxAuthHandler.class)
-            .POST("/wx", WxMessageHandler.class);
+            .POST("/wx", WxMessageHandler.class)
+            .GET("/wxPage", GetWxHtmlHandler.class);
     private static Handler handler = new Handler(router);
 
     public static void main(String[] args) throws Exception {
