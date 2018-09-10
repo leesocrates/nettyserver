@@ -7,6 +7,7 @@ import com.lee.utils.Constants;
 import com.lee.utils.FileUtils;
 import com.lee.utils.HttpUtils;
 import com.lee.wx.entity.AccessToken;
+import com.lee.wx.entity.WxUserInfo;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -104,6 +105,9 @@ public class GetWxHtmlHandler extends
         Gson gson = new Gson();
         Type type = new TypeToken<AccessToken>() {}.getType();
         AccessToken accessToken = gson.fromJson(result, type);
+        if(accessToken!=null){
+            fetchUserInfo(accessToken.access_token, accessToken.openid);
+        }
 
         System.out.println("getWxHtmlHandler result is : "+result);
     }
@@ -122,6 +126,22 @@ public class GetWxHtmlHandler extends
             String result = buffer.toString();
             return result;
         }
+    }
+
+    public void fetchUserInfo(String accesstoken, String openid) throws Exception{
+        URL serverUrl = new URL("https://api.weixin.qq.com/sns/userinfo?access_token="+accesstoken+"&openid="+openid+"&lang=zh_CN");
+        HttpURLConnection conn = (HttpURLConnection) serverUrl.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        //必须设置false，否则会自动redirect到重定向后的地址
+        conn.setInstanceFollowRedirects(false);
+        conn.connect();
+        String result = getReturn(conn);
+        Gson gson = new Gson();
+        Type type = new TypeToken<WxUserInfo>() {}.getType();
+        WxUserInfo userInfo = gson.fromJson(result, type);
+
+        System.out.println("fetchUserInfo result is : "+result);
     }
 
 }
