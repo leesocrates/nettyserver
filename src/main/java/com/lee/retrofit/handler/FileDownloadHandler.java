@@ -187,20 +187,29 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 
 	private void sendDownloadFile(ChannelHandlerContext ctx, String fileName){
 		try{
+//			InputStream in = GetHtmlHandler.class.getClassLoader()
+//					.getResourceAsStream("file/"+fileName);
+//			byte[] bytes = FileUtils.getContentFromStream(in);
+//			String responseContent = new String(bytes);
+////			System.out.println("response content is : " + responseContent);
+//			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
+//			byteBuf.writeBytes(bytes);
+//			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
+//					byteBuf);
+//			HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
+//			HttpUtils.addCacheHeader(response);
+//			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
+//					Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
+//			ctx.writeAndFlush(response);
+
 			InputStream in = GetHtmlHandler.class.getClassLoader()
 					.getResourceAsStream("file/"+fileName);
 			byte[] bytes = FileUtils.getContentFromStream(in);
-			String responseContent = new String(bytes);
-//			System.out.println("response content is : " + responseContent);
-			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
-			byteBuf.writeBytes(bytes);
-			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
-					byteBuf);
-			HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
-			HttpUtils.addCacheHeader(response);
-			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
-					Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
-			ctx.writeAndFlush(response);
+			ByteBuf buffer = Unpooled.copiedBuffer(bytes);
+			FullHttpResponse resp = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, buffer);
+			MimetypesFileTypeMap mimeTypeMap = new MimetypesFileTypeMap();
+			resp.headers().set(HttpHeaderNames.CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
+			ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
