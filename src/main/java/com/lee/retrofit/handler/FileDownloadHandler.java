@@ -207,7 +207,7 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 			byte[] bytes = FileUtils.getContentFromStream(in);
 			ByteBuf buffer = Unpooled.copiedBuffer(bytes);
 			FullHttpResponse resp = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, buffer);
-			MimetypesFileTypeMap mimeTypeMap = new MimetypesFileTypeMap();
+			HttpUtils.addCommonHttpHeader(resp, bytes, 0, "");
 			resp.headers().set(HttpHeaderNames.CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
 			ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
 		} catch(Exception e){
