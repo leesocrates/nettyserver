@@ -27,7 +27,8 @@ public class RetrofitServer {
 			.GET("/getJson/:path", GetJsonHandler.class).GET("/getFileDir/:path", FileDownloadHandler.class)
 			.GET("/getImage/:path", GetImageHandler.class).GET("getJs/:path", GetJsHandler.class)
 			.POST("/submitevaluation", SubmitEvaluationHandler.class)
-			.GET("/getverifycode", GetAccountInfoHandler.class).GET("/download/:path", AutoUpdateHandler.class);
+			.GET("/getverifycode", GetAccountInfoHandler.class).GET("/download/:path", AutoUpdateHandler.class)
+			.GET("/static/file/download/:path", HttpStaticFileServerHandler.class);
 	Handler handler = new Handler(router);
 
 	public static void main(String[] args) throws Exception {

@@ -23,7 +23,7 @@ public class WxServer {
 
     private static final Router router = new Router().GET("/wx", WxAuthHandler.class)
             .POST("/wx", WxMessageHandler.class)
-            .GET("/wxPage", GetWxHtmlHandler.class);
+            .GET("/wechat", GetWxHtmlHandler.class);
     private static Handler handler = new Handler(router);
 
     public static void main(String[] args) throws Exception {

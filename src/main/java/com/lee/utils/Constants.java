@@ -24,6 +24,7 @@ public class Constants {
 	public static final String HEADER_VALUE_CONTENT_TYPE_HTML = "text/html";
 	public static final String HEADER_VALUE_CONTENT_TYPE_XML = "text/xml";
 	public static final String HEADER_VALUE_CONTENT_TYPE_JS = "application/javascript";
+	public static final String HEADER_VALUE_CONTENT_TYPE_ZIP = "application/zip";
 	public static final String HEADER_VALUE_CACHE_CONTROL = "max-age=0, private, must-revalidate";
 	public static final String HEADER_VALUE_SERVER = "socrate.lee.com";
 	public static final String HEADER_KEY_CONTENT_TYPE = "Content-type";

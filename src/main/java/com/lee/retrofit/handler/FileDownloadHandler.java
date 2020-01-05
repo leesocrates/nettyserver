@@ -1,6 +1,7 @@
 package com.lee.retrofit.handler;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -8,6 +9,9 @@ import java.util.Calendar;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import com.lee.utils.Constants;
+import com.lee.utils.FileUtils;
+import com.lee.utils.HttpUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -24,6 +28,10 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.router.Routed;
 import io.netty.util.CharsetUtil;
+import io.netty.util.internal.SystemPropertyUtil;
+
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 	private static final String CRLF = "\r\n";
@@ -46,23 +54,26 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 				sendErrorToClient(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
 				return;
 			}
+			System.out.println("SystemPropertyUtil.get(\"user.dir\")  is : "+SystemPropertyUtil.get("user.dir"));
 			String filePath = getFilePath(uri);
-			File file = new File(filePath);
-			// 如果文件不存在
-			if (!file.exists()) {
-				sendErrorToClient(ctx, HttpResponseStatus.NOT_FOUND);
-				return;
-			}
-			// 如果是目录，则显示子目录
-			if (file.isDirectory()) {
-				sendDirListToClient(ctx, file, uri);
-				return;
-			}
-			// 如果是文件，则将文件流写到客户端
-			if (file.isFile()) {
-				sendFileToClient(ctx, file, uri);
-				return;
-			}
+			sendDownloadFile(ctx, filePath);
+//			filePath = SystemPropertyUtil.get("user.dir");
+//			File file = new File(filePath);
+//			// 如果文件不存在
+//			if (!file.exists()) {
+//				sendErrorToClient(ctx, HttpResponseStatus.NOT_FOUND);
+//				return;
+//			}
+//			// 如果是目录，则显示子目录
+//			if (file.isDirectory()) {
+//				sendDirListToClient(ctx, file, uri);
+//				return;
+//			}
+//			// 如果是文件，则将文件流写到客户端
+//			if (file.isFile()) {
+//				sendFileToClient(ctx, file, uri);
+//				return;
+//			}
 			ctx.close();
 		}
 	}
@@ -172,5 +183,26 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
 		ctx.close();
+	}
+
+	private void sendDownloadFile(ChannelHandlerContext ctx, String fileName){
+		try{
+			InputStream in = GetHtmlHandler.class.getClassLoader()
+					.getResourceAsStream("file/"+fileName);
+			byte[] bytes = FileUtils.getContentFromStream(in);
+			String responseContent = new String(bytes);
+//			System.out.println("response content is : " + responseContent);
+			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
+			byteBuf.writeBytes(bytes);
+			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
+					byteBuf);
+			HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
+			HttpUtils.addCacheHeader(response);
+			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
+					Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
+			ctx.writeAndFlush(response);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
