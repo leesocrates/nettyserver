@@ -1,7 +1,9 @@
 package com.lee.retrofit.handler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -14,23 +16,18 @@ import com.lee.utils.FileUtils;
 import com.lee.utils.HttpUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.channel.*;
+import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.router.Routed;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedFile;
 import io.netty.util.CharsetUtil;
 import io.netty.util.internal.SystemPropertyUtil;
 
+import static io.netty.handler.codec.http.HttpHeaderUtil.isKeepAlive;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_0;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -56,7 +53,7 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 			}
 			System.out.println("SystemPropertyUtil.get(\"user.dir\")  is : "+SystemPropertyUtil.get("user.dir"));
 			String filePath = getFilePath(uri);
-			sendDownloadFile(ctx, filePath);
+			sendDownloadFile(ctx, filePath, httpRequest);
 //			filePath = SystemPropertyUtil.get("user.dir");
 //			File file = new File(filePath);
 //			// 如果文件不存在
@@ -74,7 +71,7 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 //				sendFileToClient(ctx, file, uri);
 //				return;
 //			}
-			ctx.close();
+//			ctx.close();
 		}
 	}
 
@@ -185,33 +182,79 @@ public class FileDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 		ctx.close();
 	}
 
-	private void sendDownloadFile(ChannelHandlerContext ctx, String fileName){
+	private void sendDownloadFile(ChannelHandlerContext ctx, String fileName, HttpRequest request){
 		try{
-//			InputStream in = GetHtmlHandler.class.getClassLoader()
-//					.getResourceAsStream("file/"+fileName);
-//			byte[] bytes = FileUtils.getContentFromStream(in);
-//			String responseContent = new String(bytes);
-////			System.out.println("response content is : " + responseContent);
-//			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
-//			byteBuf.writeBytes(bytes);
-//			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
-//					byteBuf);
-//			HttpUtils.addCommonHttpHeader(response, bytes, 0, "");
-//			HttpUtils.addCacheHeader(response);
-//			response.headers().add(Constants.HEADER_KEY_CONTENT_TYPE,
-//					Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
-//			ctx.writeAndFlush(response);
 
-			InputStream in = GetHtmlHandler.class.getClassLoader()
-					.getResourceAsStream("file/"+fileName);
-			byte[] bytes = FileUtils.getContentFromStream(in);
-			ByteBuf buffer = Unpooled.copiedBuffer(bytes);
-			FullHttpResponse resp = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, buffer);
-			HttpUtils.addCommonHttpHeader(resp, bytes, 0, "");
-			resp.headers().set(HttpHeaderNames.CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE_ZIP);
-			ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
+			final boolean keepAlive = false;
+
+			File file = new File(SystemPropertyUtil.get("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"file"+File.separator+fileName);
+
+			RandomAccessFile raf;
+			try {
+				raf = new RandomAccessFile(file, "r");
+			} catch (FileNotFoundException ignore) {
+				sendErrorToClient(ctx, HttpResponseStatus.NOT_FOUND);
+				return;
+			}
+			long fileLength = raf.length();
+
+			HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
+			response.headers().set(HttpHeaderNames.CONTENT_LENGTH, fileLength+"");
+			setContentTypeHeader(response, file);
+
+			if (!keepAlive) {
+				response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+			} else if (request.protocolVersion().equals(HTTP_1_0)) {
+				response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+			}
+
+			// Write the initial line and the header.
+			ctx.write(response);
+
+			// Write the content.
+			ChannelFuture sendFileFuture;
+			ChannelFuture lastContentFuture;
+			if (ctx.pipeline().get(SslHandler.class) == null) {
+				sendFileFuture =
+						ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength), ctx.newProgressivePromise());
+				// Write the end marker.
+				lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+			} else {
+				sendFileFuture =
+						ctx.writeAndFlush(new HttpChunkedInput(new ChunkedFile(raf, 0, fileLength, 8192)),
+								ctx.newProgressivePromise());
+				// HttpChunkedInput will write the end marker (LastHttpContent) for us.
+				lastContentFuture = sendFileFuture;
+			}
+
+			sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
+				@Override
+				public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
+					if (total < 0) { // total unknown
+						System.err.println(future.channel() + " Transfer progress: " + progress);
+					} else {
+						System.err.println(future.channel() + " Transfer progress: " + progress + " / " + total);
+					}
+				}
+
+				@Override
+				public void operationComplete(ChannelProgressiveFuture future) {
+					System.err.println(future.channel() + " Transfer complete.");
+				}
+			});
+
+			// Decide whether to close the connection or not.
+			if (!keepAlive) {
+				// Close the connection when the whole content is written out.
+				lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	private static void setContentTypeHeader(HttpResponse response, File file) {
+		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+		response.headers().set(HttpHeaderNames.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
 	}
 }

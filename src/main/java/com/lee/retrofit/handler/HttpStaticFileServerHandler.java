@@ -8,16 +8,8 @@ import io.netty.channel.ChannelProgressiveFuture;
 import io.netty.channel.ChannelProgressiveFutureListener;
 import io.netty.channel.DefaultFileRegion;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.DefaultHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpChunkedInput;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaderValues;
-import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.router.Routed;
 import io.netty.handler.codec.http2.HttpUtil;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedFile;
@@ -25,10 +17,7 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.internal.SystemPropertyUtil;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +27,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
+import static com.lee.retrofit.handler.FileDownloadHandler.HTTP_1_1;
 import static io.netty.handler.codec.http.HttpHeaderUtil.isKeepAlive;
 import static io.netty.handler.codec.http.HttpMethod.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
@@ -95,11 +85,29 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
     public static final int HTTP_CACHE_SECONDS = 60;
 
-    private FullHttpRequest request;
+    private HttpRequest request;
+
+
+    public String getFilePath(String uri) throws Exception {
+        return uri.substring("/static/file/download/".length());
+    }
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, FullHttpRequest fullHttpRequest) throws Exception {
-        this.request = request;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof Routed) {
+            HttpRequest httpRequest = ((Routed) msg).request();
+            messageReceived(ctx, httpRequest);
+        }
+    }
+
+    @Override
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
+
+    }
+
+
+    protected void messageReceived(ChannelHandlerContext ctx, HttpRequest fullHttpRequest) throws Exception {
+        this.request = fullHttpRequest;
         if (!request.decoderResult().isSuccess()) {
             sendError(ctx, BAD_REQUEST);
             return;
@@ -112,107 +120,43 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 
         final boolean keepAlive = isKeepAlive(request);
         final String uri = request.uri();
-        final String path = sanitizeUri(uri);
+//        final String path = sanitizeUri(uri);
+        final String path = getFilePath(uri);
         if (path == null) {
             this.sendError(ctx, FORBIDDEN);
             return;
         }
+        File file = new File(SystemPropertyUtil.get("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"file"+File.separator+path);
+//        File file = new File(path);
 
-        File file = new File(path);
-        if (file.isHidden() || !file.exists()) {
-            this.sendError(ctx, NOT_FOUND);
-            return;
-        }
-
-        if (file.isDirectory()) {
-            if (uri.endsWith("/")) {
-                this.sendListing(ctx, file, uri);
-            } else {
-                this.sendRedirect(ctx, uri + '/');
-            }
-            return;
-        }
-
-        if (!file.isFile()) {
-            sendError(ctx, FORBIDDEN);
-            return;
-        }
-
-        // Cache Validation
-        String ifModifiedSince = (String) request.headers().get(HttpHeaderNames.IF_MODIFIED_SINCE);
-        if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
-            Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
-
-            // Only compare up to the second because the datetime format we send to the client
-            // does not have milliseconds
-            long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
-            long fileLastModifiedSeconds = file.lastModified() / 1000;
-            if (ifModifiedSinceDateSeconds == fileLastModifiedSeconds) {
-                this.sendNotModified(ctx);
-                return;
-            }
-        }
-
-        RandomAccessFile raf;
         try {
-            raf = new RandomAccessFile(file, "r");
-        } catch (FileNotFoundException ignore) {
-            sendError(ctx, NOT_FOUND);
-            return;
-        }
-        long fileLength = raf.length();
+            final RandomAccessFile raf = new RandomAccessFile(file, "r");
+            long fileLength = raf.length();
+            HttpResponse response = new DefaultHttpResponse(HTTP_1_1, HttpResponseStatus.OK);
+            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, fileLength+"");
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/octet-stream");
+            response.headers().add(HttpHeaderNames.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"", file.getName()));
+            ctx.write(response);
+            ChannelFuture sendFileFuture = ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength), ctx.newProgressivePromise());
+            sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
+                @Override
+                public void operationComplete(ChannelProgressiveFuture future)
+                        throws Exception {
 
-        HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
-        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, fileLength+"");
-        setContentTypeHeader(response, file);
-        setDateAndCacheHeaders(response, file);
-
-        if (!keepAlive) {
-            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
-        } else if (request.protocolVersion().equals(HTTP_1_0)) {
-            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
-        }
-
-        // Write the initial line and the header.
-        ctx.write(response);
-
-        // Write the content.
-        ChannelFuture sendFileFuture;
-        ChannelFuture lastContentFuture;
-        if (ctx.pipeline().get(SslHandler.class) == null) {
-            sendFileFuture =
-                    ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength), ctx.newProgressivePromise());
-            // Write the end marker.
-            lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
-        } else {
-            sendFileFuture =
-                    ctx.writeAndFlush(new HttpChunkedInput(new ChunkedFile(raf, 0, fileLength, 8192)),
-                            ctx.newProgressivePromise());
-            // HttpChunkedInput will write the end marker (LastHttpContent) for us.
-            lastContentFuture = sendFileFuture;
-        }
-
-        sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
-            @Override
-            public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
-                if (total < 0) { // total unknown
-                    System.err.println(future.channel() + " Transfer progress: " + progress);
-                } else {
-                    System.err.println(future.channel() + " Transfer progress: " + progress + " / " + total);
+                    raf.close();
                 }
-            }
 
-            @Override
-            public void operationComplete(ChannelProgressiveFuture future) {
-                System.err.println(future.channel() + " Transfer complete.");
-            }
-        });
+                @Override
+                public void operationProgressed(ChannelProgressiveFuture future,
+                                                long progress, long total) throws Exception {
 
-        // Decide whether to close the connection or not.
-        if (!keepAlive) {
-            // Close the connection when the whole content is written out.
-            lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+                }
+            });
+            ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+        } catch (FileNotFoundException e) {
+
+        } catch (IOException e) {
+
         }
     }
 
@@ -332,7 +276,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
      * and closes the connection after the response being sent.
      */
     private void sendAndCleanupConnection(ChannelHandlerContext ctx, FullHttpResponse response) {
-        final FullHttpRequest request = this.request;
+        final HttpRequest request = this.request;
         final boolean keepAlive = isKeepAlive(request);
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes()+"");
         if (!keepAlive) {
