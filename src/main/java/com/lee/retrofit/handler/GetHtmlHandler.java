@@ -57,7 +57,7 @@ public class GetHtmlHandler extends
 					.getResourceAsStream("html/"+fileName);
 			byte[] bytes = FileUtils.getContentFromStream(in);
 			String responseContent = new String(bytes);
-			System.out.println("response content is : " + responseContent);
+//			System.out.println("response content is : " + responseContent);
 			ByteBuf byteBuf = ctx.alloc().buffer(responseContent.length());
 			byteBuf.writeBytes(bytes);
 			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK,
